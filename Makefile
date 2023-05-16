@@ -66,7 +66,7 @@ setup: include lib
 
 # Pull and update the the build submodules
 submodules:
-	git submodule update --init --recursive
+	git submodule update --init --recursive --remote
 
 # Copy the relevant header files into includes
 include: submodules
