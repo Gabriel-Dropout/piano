@@ -1,4 +1,6 @@
 include
 lib
-bin
+bin/*.o
+bin/*.d
+bin/*.exe
 .idea
