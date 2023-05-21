@@ -15,6 +15,9 @@
 #include "raylib.h"
 #include "raylib-cpp.hpp"
 
+#define WHITE_MODE true
+// if white mode true, then every key are mapped to white keys.
+
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
@@ -35,13 +38,15 @@ int main(void)
     raylib::Sound Keys[40][3];
     float volume[40][3] = {0,};
     int rotation[40] = {0,};
-    // Order of Keymap: ZXCVBBASDFGQWERT1234567890YUIOPHJKL:NM<>?
     int Keymap[40] = {'Z', 'X', 'C', 'V', 'B', 'A', 'S', 'D', 'F', 'G', 'Q', 'W', 'E', 'R', 'T', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'Y', 'U', 'I', 'O', 'P', 'H', 'J', 'K', 'L', ';', 'N', 'M', ',', '.', '/'};
+    int whiteIndex[] = {0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24, 26, 28, 29, 31, 33, 35, 36, 38, 40, 41, 43, 45, 47, 48, 50, 52, 53, 55, 57, 59, 60, 62, 64, 65};
+    float sustain = 0.99;
     for(int i = 0; i < 40; i++){
         for(int j = 0; j < 3; j++){
             // I have A4, and A5, A6.
             // A4 is 440Hz, A5 is 880Hz.
             // A4 is 9th key, A5 is 21st key.
+            #ifndef WHITE_MODE // if white mode true, then every key are mapped to white keys.
             if(i<21) {
                 Keys[i][j].Load("resources/A4.wav");
                 Keys[i][j].SetPitch(std::pow(2, (i-9)/12.0));
@@ -52,6 +57,18 @@ int main(void)
                 Keys[i][j].Load("resources/A6.wav");
                 Keys[i][j].SetPitch(std::pow(2, (i-33)/12.0));
             }
+            #else
+            if(whiteIndex[i]<21) {
+                Keys[i][j].Load("resources/A4.wav");
+                Keys[i][j].SetPitch(std::pow(2, (whiteIndex[i]-9-12)/12.0));
+            }else if(whiteIndex[i]<33){
+                Keys[i][j].Load("resources/A5.wav");
+                Keys[i][j].SetPitch(std::pow(2, (whiteIndex[i]-21-12)/12.0));
+            }else{
+                Keys[i][j].Load("resources/A6.wav");
+                Keys[i][j].SetPitch(std::pow(2, (whiteIndex[i]-33-12)/12.0));
+            }
+            #endif
         }
     }
 
@@ -73,7 +90,7 @@ int main(void)
             // decrease volume over time for not selected sounds
             for(int j = 0; j < 3; j++){
                 if(j != rotation[i]){
-                    volume[i][j] = std::max(0.0f, volume[i][j]*0.95f);
+                    volume[i][j] = std::max(0.0f, volume[i][j]*sustain);
                     Keys[i][j].SetVolume(volume[i][j]);
                 }
             }
