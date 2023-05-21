@@ -23,7 +23,7 @@ ifeq ($(OS), Windows_NT)
 	# Set Windows macros
 	platform := Windows
 	CXX ?= g++
-	linkFlags += -Wl,--allow-multiple-definition -pthread -lopengl32 -lgdi32 -lwinmm -mwindows -static -static-libgcc -static-libstdc++
+	linkFlags += -Wl,--allow-multiple-definition -pthread -lopengl32 -lgdi32 -lwinmm -static -static-libgcc -static-libstdc++
 	libGenDir := src
 	THEN := &&
 	PATHSEP := \$(BLANK)
@@ -95,7 +95,7 @@ $(buildDir)/%.o: src/%.cpp Makefile
 
 # Run the executable
 execute:
-	$(target) $(ARGS)
+	cd $(buildDir) && $(executable)
 
 # Clean up all relevant files
 clean:
